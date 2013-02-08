@@ -71,7 +71,10 @@ public:
 public:
   // Miscellaneous
 
-  void printReprToStream(VM vm, std::ostream& out, int depth) {
+  inline
+  GlobalNode* globalize(RichNode self, VM vm);
+
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width) {
     out << "<OptName>";
   }
 };
@@ -122,7 +125,10 @@ public:
 public:
   // Miscellaneous
 
-  void printReprToStream(VM vm, std::ostream& out, int depth) {
+  inline
+  GlobalNode* globalize(RichNode self, VM vm);
+
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width) {
     out << "<Name>";
   }
 
@@ -151,15 +157,11 @@ public:
     return vm->getAtom(MOZART_STR("name"));
   }
 
-  NamedName(VM vm, RichNode printName, UUID uuid):
-    WithHome(vm), _uuid(uuid) {
-    _printName.init(vm, printName);
-  }
+  NamedName(VM vm, atom_t printName, UUID uuid):
+    WithHome(vm), _printName(printName), _uuid(uuid) {}
 
-  NamedName(VM vm, RichNode printName):
-    WithHome(vm), _uuid(vm->genUUID()) {
-    _printName.init(vm, printName);
-  }
+  NamedName(VM vm, atom_t printName):
+    WithHome(vm), _printName(printName), _uuid(vm->genUUID()) {}
 
   inline
   NamedName(VM vm, GR gr, NamedName& from);
@@ -173,6 +175,12 @@ public:
   int compareFeatures(VM vm, RichNode right);
 
 public:
+  // WithPrintName interface
+
+  inline
+  atom_t getPrintName(VM vm);
+
+public:
   // NameLike interface
 
   bool isName(VM vm) {
@@ -182,12 +190,18 @@ public:
 public:
   // Miscellaneous
 
-  void printReprToStream(VM vm, std::ostream& out, int depth) {
-    out << "<Name/" << repr(vm, _printName) << ">";
+  inline
+  UnstableNode serialize(VM vm, SE se);
+
+  inline
+  GlobalNode* globalize(RichNode self, VM vm);
+
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width) {
+    out << "<Name/" << _printName << ">";
   }
 
 private:
-  StableNode _printName;
+  atom_t _printName;
   UUID _uuid;
 };
 
@@ -233,6 +247,12 @@ public:
   int compareFeatures(VM vm, RichNode right);
 
 public:
+  // WithPrintName interface
+
+  inline
+  atom_t getPrintName(VM vm);
+
+public:
   // NameLike interface
 
   bool isName(VM vm) {
@@ -243,7 +263,10 @@ public:
   // Miscellaneous
 
   inline
-  void printReprToStream(VM vm, std::ostream& out, int depth);
+  UnstableNode serialize(VM vm, SE se);
+
+  inline
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width);
 
 private:
   unique_name_t _value;

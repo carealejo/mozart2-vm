@@ -141,7 +141,9 @@ struct Interface<Wakeable>:
 class Literal;
 template<>
 struct Interface<Literal>:
-  ImplementedBy<Atom, OptName, GlobalName, Boolean, Unit>,
+  ImplementedBy<Atom,
+                OptName, GlobalName, NamedName, UniqueName,
+                Boolean, Unit>,
   NoAutoReflectiveCalls {
 
   bool isLiteral(RichNode self, VM vm) {
@@ -152,7 +154,8 @@ struct Interface<Literal>:
 class NameLike;
 template<>
 struct Interface<NameLike>:
-  ImplementedBy<OptName, GlobalName>,
+  ImplementedBy<OptName, GlobalName, NamedName, UniqueName,
+                Unit, Boolean>,
   NoAutoReflectiveCalls {
 
   bool isName(RichNode self, VM vm) {
@@ -249,6 +252,16 @@ struct Interface<CodeAreaProvider>:
   void getCodeAreaDebugInfo(RichNode self, VM vm,
                             atom_t& printName, UnstableNode& debugData) {
     raiseTypeError(vm, MOZART_STR("CodeArea"), self);
+  }
+};
+
+class WithPrintName;
+template<>
+struct Interface<WithPrintName>:
+  ImplementedBy<Abstraction, BuiltinProcedure, UniqueName, NamedName, Atom> {
+
+  atom_t getPrintName(RichNode self, VM vm) {
+    raiseTypeError(vm, MOZART_STR("WithPrintName"), self);
   }
 };
 
@@ -648,26 +661,6 @@ struct Interface<StringLike>:
 
   bool stringHasSuffix(RichNode self, VM vm, RichNode suffix) {
     raiseTypeError(vm, MOZART_STR("String"), self);
-  }
-};
-
-class VirtualString;
-template<>
-struct Interface<VirtualString>:
-  ImplementedBy<SmallInt, Float, Atom, Boolean, String, Unit, Cons, Tuple,
-                ByteString>,
-  NoAutoReflectiveCalls {
-
-  bool isVirtualString(RichNode self, VM vm) {
-    return false;
-  }
-
-  void toString(RichNode self, VM vm, std::basic_ostream<nchar>& sink) {
-    raiseTypeError(vm, MOZART_STR("VirtualString"), self);
-  }
-
-  nativeint vsLength(RichNode self, VM vm) {
-    raiseTypeError(vm, MOZART_STR("VirtualString"), self);
   }
 };
 

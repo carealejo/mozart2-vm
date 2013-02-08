@@ -79,6 +79,12 @@ public:
   bool equals(VM vm, RichNode right);
 
 public:
+  // WithPrintName interface
+
+  inline
+  atom_t getPrintName(VM vm);
+
+public:
   // BuiltinCallable interface
 
   bool isBuiltin(VM vm) {
@@ -128,9 +134,12 @@ public:
 public:
   // Miscellaneous
 
-  void printReprToStream(VM vm, std::ostream& out, int depth) {
-    out << "<P/" << _builtin->getArity() << " " << _builtin->getName() << ">";
-  }
+  inline
+  UnstableNode serialize(VM vm, SE se);
+
+  inline
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width);
+
 private:
   Builtin* _builtin;
 };
@@ -170,6 +179,12 @@ public:
   }
 
 public:
+  // WithPrintName interface
+
+  inline
+  atom_t getPrintName(VM vm);
+
+public:
   // Callable interface
 
   bool isCallable(VM vm) {
@@ -205,7 +220,17 @@ public:
   // Miscellaneous
 
   inline
-  void printReprToStream(VM vm, std::ostream& out, int depth);
+  void printReprToStream(VM vm, std::ostream& out, int depth, int width);
+
+  inline
+  UnstableNode serialize(VM vm, SE se);
+
+  inline
+  GlobalNode* globalize(RichNode self, VM vm);
+
+public:
+  inline
+  void setUUID(RichNode self, VM vm, const UUID& uuid);
 
 private:
   inline
@@ -216,6 +241,8 @@ private:
   void fillCodeAreaCache(VM vm);
 
 private:
+  GlobalNode* _gnode;
+
   StableNode _body;
   size_t _Gc;
 

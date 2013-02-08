@@ -51,7 +51,6 @@ const OpCode OpMoveMoveYXXY = 0x0B;
 const OpCode OpMoveMoveXYYX = 0x0C;
 
 const OpCode OpAllocateY = 0x0D;
-const OpCode OpDeallocateY = 0x0E;
 
 const OpCode OpCreateVarX = 0x0F;
 const OpCode OpCreateVarY = 0x10;
@@ -91,15 +90,18 @@ const OpCode OpReturn = 0x40;
 const OpCode OpBranch = 0x41;
 const OpCode OpBranchBackward = 0x42;
 const OpCode OpCondBranch = 0x43;
+const OpCode OpCondBranchFB = 0x44;
+const OpCode OpCondBranchBF = 0x45;
+const OpCode OpCondBranchBB = 0x46;
 
-const OpCode OpPatternMatchX = 0x44;
-const OpCode OpPatternMatchY = 0x45;
-const OpCode OpPatternMatchG = 0x46;
+const OpCode OpPatternMatchX = 0x47;
+const OpCode OpPatternMatchY = 0x48;
+const OpCode OpPatternMatchG = 0x49;
 
 const OpCode OpUnifyXX = 0x50;
 const OpCode OpUnifyXY = 0x51;
-const OpCode OpUnifyXK = 0x52;
-const OpCode OpUnifyXG = 0x53;
+const OpCode OpUnifyXG = 0x52;
+const OpCode OpUnifyXK = 0x53;
 const OpCode OpUnifyYY = 0x54;
 const OpCode OpUnifyYG = 0x55;
 const OpCode OpUnifyYK = 0x56;
